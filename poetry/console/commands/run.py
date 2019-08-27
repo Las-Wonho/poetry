@@ -26,6 +26,7 @@ class RunCommand(EnvCommand):
         module, callable_ = script.split(":")
 
         src_in_sys_path = "sys.path.append('src'); " if self._module.is_in_src() else ""
+        fixed_args = self.__fix_args_quotation_mark(args)
 
         cmd = ["python", "-c"]
 
@@ -34,7 +35,7 @@ class RunCommand(EnvCommand):
             "from importlib import import_module; "
             "sys.argv = {!r}; {}"
             "import_module('{}').{}()\"".format(
-                args, src_in_sys_path, module, callable_
+                fixed_args, src_in_sys_path, module, callable_
             )
         ]
 
@@ -67,3 +68,6 @@ class RunCommand(EnvCommand):
         self._application_definition_merged = True
         if merge_args:
             self._application_definition_merged_with_args = True
+
+    def __fix_args_quotation_mark(self, args):
+        return str(args).replace('"', '\\"').replace("'", "'")
