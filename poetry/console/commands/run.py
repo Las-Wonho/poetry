@@ -3,6 +3,7 @@ from cleo import argument
 from .env_command import EnvCommand
 import platform
 
+
 class RunCommand(EnvCommand):
 
     name = "run"
@@ -35,11 +36,11 @@ class RunCommand(EnvCommand):
 
         module, callable_ = script.split(":")
 
-        src_in_sys_path = "sys.path.append('src'); " if self._module.is_in_src() else ""
-        fixed_args = list(map(self.__fix_args_quotation_mark, args))
+        src_in_sys_path = "sys.path.append('src'); " if self._module.is_in_src(
+        ) else ""
+        fixed_args = self.__fix_args_quotation_mark(args)
 
         cmd = ["python", "-c"]
-
         cmd += [
             "import sys; "
             "from importlib import import_module; "
@@ -77,4 +78,4 @@ class RunCommand(EnvCommand):
             self._application_definition_merged_with_args = True
 
     def __fix_args_quotation_mark(self, args):
-        return str(args).replace('"', '\\""')
+        return str(args).replace('"', '\\"').replace("'", "\'")
