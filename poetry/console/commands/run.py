@@ -1,7 +1,6 @@
 from cleo import argument
 
 from .env_command import EnvCommand
-import platform
 
 
 class RunCommand(EnvCommand):
@@ -47,7 +46,6 @@ class RunCommand(EnvCommand):
             "sys.argv = {!r}; {}"
             "import_module('{}').{}()".format(fixed_args, src_in_sys_path, module, callable_)
         ]
-
         return self.env.execute(*cmd)
 
     @property
