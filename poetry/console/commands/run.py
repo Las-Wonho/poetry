@@ -57,23 +57,7 @@ class RunCommand(EnvCommand):
         path = poetry.file.parent
         module = Module(package.name, path.as_posix(), package.packages)
 
-    def merge_application_definition(self, merge_args=True):
-        if self._application is None or (
-            self._application_definition_merged
-            and (self._application_definition_merged_with_args or not merge_args)
-        ):
-            return
-
-        if merge_args:
-            current_arguments = self._definition.get_arguments()
-            self._definition.set_arguments(
-                self._application.get_definition().get_arguments()
-            )
-            self._definition.add_arguments(current_arguments)
-
-        self._application_definition_merged = True
-        if merge_args:
-            self._application_definition_merged_with_args = True
+        return module
 
     def __fix_args_quotation_mark(self, args):
         return str(args).replace('"', '\\"').replace("'", "\'")
