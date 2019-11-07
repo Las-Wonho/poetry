@@ -1,5 +1,5 @@
 from .env_command import EnvCommand
-
+import platform
 
 class RunCommand(EnvCommand):
     """
@@ -36,8 +36,11 @@ class RunCommand(EnvCommand):
             "sys.argv = {!r}; {}"
             """import_module('{}').{}()\"""".format(
                 fixed_args, src_in_sys_path, module, callable_
-            ).replace("\\\"", "")
+            )
         ]
+        # Window don't need replace twice. So, this work will do only Mac
+        if platform.system() == 'Darwin':
+            cmd[2] = cmd[2].replace("\\\"", "")
         return self.env.run(*cmd, shell=True, call=True)
 
     @property
